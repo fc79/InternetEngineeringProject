@@ -7,10 +7,10 @@
     </h1>
 
 </div>
-<div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
+<div class="lg:w-2/4 mx-4 lg:mx-auto  p-4 bg-zinc-700 rounded-xl" style="overflow-y:scroll;height:300px">
 <div class="chat-messeges space-y-3" id="chat-messages">
     {% for message in messages %}
-        <div class="p-4 bg-gray-200 rounded-xl">';
+        <div class="p-4 bg-violet-200 rounded-xl">
             <p class="font-semibold">{{ message.user.username }}</p>
             <p> {{message.content}} </p> 
         </div>
@@ -20,15 +20,17 @@
 </div>
 
 </div>
-<div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-white rounded-xl">
-    <form method="post" action="." class="flex">
+<div class="lg:w-2/4 mx-4 lg:mx-auto p-4 bg-zinc-700 rounded-xl">
+    <form method="post" action="." class="flex" >
         {% csrf_token %}
 
-        <input type="text" name="content" class="flex-1 mr-3" placeholder="Type a Message..." id="chat-message-input">
-        <button class="px-5 py-3 rounded-xl text-white bg-teal-800 hover:bg-teal-700"
+        <input type="text" name="content" class="flex-1 mr-3 bg-violet-200	rounded-xl" placeholder="Type a Message..." id="chat-message-input">
+        <button class="px-5 py-3 rounded-xl text-white bg-violet-400 hover:bg-violet-500"
         id="chat-message-submit">
             Submit
         </button>
+        <input type="file" accept="image/*" id="file-input" />
+
     </form>
 </div>
 
@@ -37,8 +39,8 @@
 {{ room.slug|json_script:"json_roomname" }}
 {{ request.user.username|json_script:"json_username"}}
 <script>
-    const roomName = JSON.parse(document.getElementById("json_roomname").textContent);
-    const userName = JSON.parse(document.getElementById("json_username").textContent);
+    const roomName = JSON.parse(document.getElementById("json_roomname").textContent)
+    const userName = JSON.parse(document.getElementById("json_username").textContent)
     const chatSocket = new WebSocket(
         'ws://'
         + window.location.host
@@ -46,15 +48,20 @@
         + roomName
         + '/'
     )
+  const fileInput = document.getElementById('file-input');
+
+ 
+       
     chatSocket.onmessage = function(e){
-        console.log("onMessage")
+        console.log("onMessage",e.data)
+        
         const data = JSON.parse(e.data);
         if(data.message)
         {
-          let html =  ' <div class="p-4 bg-gray-200 rounded-xl">';
-            html +=  '<p class="font-semibold">' + data.username + '</p>';
-            html += '<p>' + data.message + '</p> </div>';
-            document.querySelector('#chat-messages').innerHTML += html;
+          let html =  ' <div class="p-4 bg-gray-200 rounded-xl">'
+            html +=  '<p class="font-semibold">' + data.username + '</p>'
+            html += '<p>' + data.message + '</p> </div>'
+            document.querySelector('#chat-messages').innerHTML += html
            
         }
         else {
@@ -64,6 +71,20 @@
     chatSocket.onclose= function(e){
         console.log("onclosed")
     }
+    
+const sendto = e => {
+    var blobFile = e.target.files[0];
+    var formData = new FormData();
+    formData.append("fileToUpload", blobFile);
+     chatSocket.send(JSON.stringify({
+            'message':formData,
+            'username':userName,
+            'room':roomName
+        }))
+    }
+    fileInput.addEventListener('change', (e) =>
+    sendto(e)
+  );
     document.querySelector('#chat-message-submit').onclick = function(e){
         e.preventDefault();
         const messageInputDom = document.querySelector('#chat-message-input');
@@ -74,7 +95,14 @@
             'username':userName,
             'room':roomName
         }));
-        messageInputDom.value = " ";
+
+        messageInputDom.value = " "
+    
+        // var img = document.createElement('img');
+        // var urlObject = URL.createObjectURL(event.data);
+        // img.src = urlObject;
+        // document.body.appendChild(img);
+      
         return false;
     }
 </script>
