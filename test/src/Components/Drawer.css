@@ -1,0 +1,61 @@
+.rectangle {
+  width: 100%;
+  /* background: #f9fafe; */
+  /* border-radius: 4%; */
+}
+.rectangle:after {
+  content: "";
+  display: inline-block;
+  padding-bottom: 50%;
+  background-color: #513686;
+}
+.messageInput {
+  /* margin: auto; */
+  width: 41%;
+  /* display: block; */
+  height: 10%;
+  border-radius: 8px;
+  background-color: #513686;
+  color: white;
+  font-size: large;
+}
+.buttonStyle {
+  width: 7%;
+  /* display: block; */
+  height: 10%;
+  border-radius: 10px;
+  background-color: #513686;
+  color: white;
+  font-size: large;
+  cursor: pointer;
+}
+.fileButtonStyle {
+  width: 15%;
+  /* display: block; */
+  height: 10%;
+  border-radius: 10px;
+  background-color: #513686;
+  color: white;
+  font-size: large;
+}
+.headings {
+  color: white;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  font-weight: bold;
+}
+.buttonCreate {
+  margin: auto;
+  display: flex;
+  width: 52%;
+  /* display: block; */
+  height: 10%;
+  border-radius: 10px;
+  background-color: #513686;
+  color: white;
+  font-size: large;
+  white-space: nowrap;
+  align-items: center;
+  cursor: pointer;
+}
